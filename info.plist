@@ -79,7 +79,7 @@
 				<key>runningsubtext</key>
 				<string>Loading...</string>
 				<key>script</key>
-				<string>/usr/local/bin/python3 ipgeo.py "{query}"</string>
+				<string>/usr/bin/python3 ipgeo.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -102,7 +102,20 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Simply type your keyword into Alfred (default: `ipg`) and provide a query (IP/Domain) to see its infomation from "https://ip.tool.chinaz.com".</string>
+	<string>## Usage
+
+Simply type your keyword into Alfred (default: `ipg`) and provide a query (IP/Domain) to see its infomation from an online database.
+
+## ‼️ Attention
+
+It relies on `beautifulsoup4` now, which should be installed first.
+Run this command in any terminal you'd like:
+
+```
+/usr/bin/python3 -m pip install beautifulsoup4
+```
+
+If you want to help remove this dependency, you can visit the GitHub repo here: &lt;https://github.com/hunterMG/alfred-ipgeo&gt;.</string>
 	<key>uidata</key>
 	<dict>
 		<key>14F7E233-24D4-4A54-B257-A30113151725</key>
@@ -139,7 +152,7 @@
 			<key>description</key>
 			<string>Set your own keyword if "ipg" isn't the keyword for you :)</string>
 			<key>label</key>
-			<string>Keyword</string>
+			<string>Workflow keyword</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
