@@ -25,11 +25,11 @@
 	<key>createdby</key>
 	<string>hunterMG</string>
 	<key>description</key>
-	<string>Get IP GEO info from "https://ip.tool.chinaz.com/"</string>
+	<string>Get IP/domain Geo info from an online database.</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>IPGEO</string>
+	<string>IPGeo</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -85,9 +85,9 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>IP GEO info (ip.tool.chinaz.com)</string>
+				<string>Type an IP address/domain to see its location &amp; ISP</string>
 				<key>title</key>
-				<string>GEO IP Search</string>
+				<string>IP/domain Geo info query</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -146,8 +146,10 @@
 			<string>keyword</string>
 		</dict>
 	</array>
+	<key>variablesdontexport</key>
+	<array/>
 	<key>version</key>
-	<string>1.0</string>
+	<string>0.1</string>
 	<key>webaddress</key>
 	<string>https://github.com/huntermg/alfred-ipgeo</string>
 </dict>
