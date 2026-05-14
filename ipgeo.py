@@ -1,94 +1,65 @@
-import subprocess
 import urllib.request
-from bs4 import BeautifulSoup
-import sys
+import urllib.error
 import json
-import unicodedata
+import sys
+import socket
+import struct
 
-# config
-debug = False
-# debug = False
-exception = ""
+ip = sys.argv[1] if len(sys.argv) > 1 else ''
+if not ip:
+    ip = ''
 
-# Get query from Alfred
-alfredQuery = str(sys.argv[1])
-ip = unicodedata.normalize('NFC',alfredQuery)
+url = f"http://ip-api.com/json/{ip}?fields=status,country,regionName,city,isp,org,as,query"
 
-# if ip is None or len(ip) == 0 or ip == "null":
-# # Get IP address from clipboard
-#     process = subprocess.Popen("pbpaste", stdout=subprocess.PIPE)
-#     output, error = process.communicate()
-#     ip = output.decode("utf-8").strip()
-
-# ip = 'bing.com'
-
-url = f"https://ip.tool.chinaz.com/{ip}"
-# response = requests.get(url, timeout=5)
-
-# 发送GET请求获取网页内容
 try:
-    response = urllib.request.urlopen(url, timeout=5)
+    response = urllib.request.urlopen(url, timeout=10)
+    data = json.loads(response.read().decode('utf-8'))
 except Exception as e:
-    trace_back = sys.exc_info()[2]
-    line = trace_back.tb_lineno
-    exception = str(line) + ": " + str(e)
+    item = {
+        "uid": 1,
+        "type": "default",
+        "title": "Error",
+        "subtitle": str(e),
+        "arg": url
+    }
+    items = {"items": [item]}
+    sys.stdout.write(json.dumps(items))
+    sys.exit(0)
 
-html_content = response.read().decode('utf-8')
-if debug:
-    with open("tmp.html", "w") as file:
-        file.write(html_content)
+if data.get("status") == "fail":
+    item = {
+        "uid": 1,
+        "type": "default",
+        "title": "GEO IP - No results, empty query, or error",
+        "subtitle": data.get("message", "Invalid query or IP address"),
+        "arg": url
+    }
+    items = {"items": [item]}
+    sys.stdout.write(json.dumps(items))
+    sys.exit(0)
 
-def getResult(html_content):
-# 解析 HTML 内容
-    soup = BeautifulSoup(html_content, 'html.parser')
+def ip_to_numeric(ip_addr):
+    try:
+        packed = socket.inet_aton(ip_addr)
+        return struct.unpack("!I", packed)[0]
+    except Exception:
+        return ""
 
-# 使用 CSS 选择器获取指定的元素
-    divs = soup.select('#leftinfo > div:nth-child(3) > div:nth-child(2) > div.WhwtdWrap.bor-b1s.col-gray03')
+geo_parts = [p for p in [data.get("country"), data.get("regionName"), data.get("city")] if p]
+geo = " ".join(geo_parts)
+ip_addr = data.get("query", "")
+isp = data.get("isp", "")
 
-# 遍历每个 div，并提取每个 span 的信息
-    itemList = []
-    for div in divs:
-        item = {}
-        spans = div.find_all('span')
-        item["domain"] = spans[0].text.strip()
-        item["ip"] = spans[1].text.strip()
-        item["numeric_address"] = spans[2].text.strip()
-        item["ISP"] = spans[3].text.strip()
-        item["GEO"] = spans[4].text.split("\n")[1]
-        item["title"] = item["ip"]
-        item["subtitle"] = item["GEO"] + "  " + item["ISP"]
-        # arg was passed to next object(eg: Copy to Cilpboard)
-        item["arg"] = item["ip"]
-        itemList.append(item)
-    return itemList
+item = {
+    "domain": ip,
+    "ip": ip_addr,
+    "numeric_address": ip_to_numeric(ip_addr),
+    "ISP": isp,
+    "GEO": geo,
+    "title": ip_addr,
+    "subtitle": f"{geo} | {isp}",
+    "arg": ip_addr
+}
 
-itemList = []
-if html_content.find("域名或IP解析失败") != -1:
-    exception = "chinaz.com: 域名或IP解析失败"
-else:
-    itemList = getResult(html_content)
-
-# print(itemList)
-
-if exception:
-    item = {}
-    item["uid"] = 1
-    item["type"] = "default"
-    item["title"] = "There was an error:"
-    item["subtitle"] = str(exception)
-    item["arg"] = url
-    itemList.append(item)
-
-if not itemList:
-    item = {}
-    item["uid"] = 1
-    item["type"] = "default"
-    item["title"] = "GEO IP - No results, empty query, or error"
-    item["subtitle"] = " "
-    item["arg"] = url
-    itemList.append(item)
-
-items = {}
-items["items"] = itemList
-items_json = json.dumps(items)
-sys.stdout.write(items_json)
+items = {"items": [item]}
+sys.stdout.write(json.dumps(items))
