@@ -73,7 +73,7 @@
 				<key>queuedelayimmediatelyinitially</key>
 				<false/>
 				<key>queuedelaymode</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>queuemode</key>
 				<integer>2</integer>
 				<key>runningsubtext</key>
@@ -104,18 +104,9 @@
 	<key>readme</key>
 	<string>## Usage
 
-Simply type your keyword into Alfred (default: `ipg`) and provide a query (IP/Domain) to see its infomation from an online database.
+Simply type your keyword into Alfred (default: `ipg`) and enter a query (IP/Domain) to retrieve information from an online service.
 
-## ‼️ Attention
-
-It relies on `beautifulsoup4` now, which should be installed first.
-Run this command in any terminal you'd like:
-
-```
-/usr/bin/python3 -m pip install beautifulsoup4
-```
-
-If you want to help remove this dependency, you can visit the GitHub repo here: &lt;https://github.com/hunterMG/alfred-ipgeo&gt;.</string>
+Check any updates on &lt;https://github.com/hunterMG/alfred-ipgeo&gt;.</string>
 	<key>uidata</key>
 	<dict>
 		<key>14F7E233-24D4-4A54-B257-A30113151725</key>
@@ -162,7 +153,7 @@ If you want to help remove this dependency, you can visit the GitHub repo here: 
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>0.1</string>
+	<string>2026.07.07</string>
 	<key>webaddress</key>
 	<string>https://github.com/huntermg/alfred-ipgeo</string>
 </dict>
